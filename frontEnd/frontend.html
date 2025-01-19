@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruit Quality Prediction</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('https://www.shutterstock.com/shutterstock/videos/1064012983/thumb/6.jpg?ip=x480') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9); /* Slight transparency for the white box */
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            color: #e74c3c;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        input[type="file"] {
+            display: block;
+            margin: 15px auto 10px;
+            padding: 5px;
+        }
+
+        button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #d62c1a;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .loader {
+            display: none;
+            margin: 15px auto;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #e74c3c;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fruit Quality Prediction</h1>
+        <form id="uploadForm">
+            <label for="image">Upload a fruit image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+            <button type="submit">Predict</button>
+            <div class="loader" id="loader"></div>
+        </form>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const loader = document.getElementById('loader');
+            const resultElement = document.getElementById('result');
+            loader.style.display = 'block';
+            resultElement.textContent = '';
+
+            const formData = new FormData();
+            const fileInput = document.getElementById('image');
+            formData.append('image', fileInput.files[0]);
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/predict', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.json();
+                resultElement.textContent = `Prediction: ${result.prediction}`;
+            } catch (error) {
+                resultElement.textContent = 'Error: Unable to process your request.';
+                resultElement.style.color = 'red';
+            } finally {
+                loader.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
