@@ -23,24 +23,24 @@ def initialize_firebase():
     if not firebase_admin._apps:
         try:
             # Your credentials dictionary
-            firebase_config = {
-  "type": "service_account",
-  "project_id": "visionml-flask",
-  "private_key_id": "bb711339e4a0e57701e9dde2fa42dbc6c12c1af3",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQClr/ToH5pxsVhc\n3zrSxclo+c7aVihhQZc6CSDDkrmSCqIJ6S1L+e8v5hiHeUMmS8xvt3x2A0BOwjhU\n5gwTUF9DP94FgVWtLQw69EI1urXL0QmAbUIide6bvG+3gG+uC+KR1nKkGXFWooEs\nNloSCSFNyGYiaIjvdE4DlBrCXYcE2BMVS8EV6xXQ2D4dYOUJyKt6Gd8X7j6QumkC\nbbDLzazyvI1JJAB4kvC8dZZ13u42pIrAF5L1uCBJcIfjivuPQkGPylrkto9LZ4pZ\nb15iZxK1xhFiNrCEBheBX6890/nVmPb8Fu00jddN5wweCnBhm2uP0tv4NaTLzBlH\nW6vrytetAgMBAAECggEAKUGY30LdS3GQMeHw7QJMblwDrpi1CdCSBiS3OJOcqxmE\nMykReyFjNl9aXMNsXckSgP/kmSMinGneqn804wtIiT+KOn8ztQEqUjS3ltbkxTlK\nHyU1ikyoyzUe8UelJ2a0tkE6fxOJxfuFZButjl+hIBPmIKu8azmf4mK6zgqJYAJB\nveizqTWmD3tgdxg+dolDERGFau8UIfmPlJtfD7mw99kFpIwa9gyHswdPnb29jslR\ngFiuqYRk9S/7INkV1lEuFLrm3I5jUWfSil+P7Djy79z+ei7V2/V2W5/Hta75Tm4g\nf4utEZkBGcKy+nfPx6j1EYECHA7T7RSh8zLO6sMYGQKBgQDge2CNMQ7lj9OVc6DL\nbbJKbNUShR7mEKfSIyKplGkG/1PK1IIEPRG5X3dP25UAXcF8RvhTTyt9vCF1sMJy\n95N2i+ww0BuG/UxQb1OvYVOlF807jaYnnXR38NeiB4P0f0kL2WOhkBXRKV5z6/pO\nOnJ3NQmzqJu2zMpBgE+6sCMgSQKBgQC8806P6gg5EXtx+x03UEApPQsn3A8KLAAZ\nzRuuRVLXBUgFHVD4mi/IWJK6YB0xCkjqK3NTVdIaej/ic8n0TOJ3Gq19Fmbdn2qQ\nBBvH61bHpYLMH/YnVevdTSDHlnlTfWAC1CqHv6dysybMiMFb2RhqlHmq0GN7jLEP\nS1LE+0IERQKBgQCE7KnMkWsnxhXc3n4tV4SGi5FUCR21z9EAHqwMzIOwkAp3BYUD\nq4HOSdhlojnF4L6Mr52l/zBaoMcTYJqT50Qbo1k1wlU6hszkqDdel3wnO0Pc6tCj\njpoD18pn+JlLcv+3E3/qkF5K33s9m1M5dWSIcBCRoNqr0PJG/Qq5GkmCeQKBgQCw\nlyx7cByTSXV3x1s80PHGGNkOPaqItSq68mjGbN/JOZRfw1Bjp6a0taMcMKvXo2cW\nA9narsCYIl0GhXTfr+OPsQ0ndQJaap0rT8uvApGuMU+W+uART0oLIARcxJNLpkdP\nHX9KM6KJnknKqp0b/D/HjFBRhkUTuR/ZzWnj03eViQKBgEQdPwPGnPy4rOgOv9Yg\n3uWLUOa8MIfp/vstofKClSrKcKhgvE4mEqOCLyLH1Te+oeDQgCD+kpTc2My3/ofV\nWSv0x129qMXceE3/0tpTOiiWXNo37zRqg1iLgLeJadFGnfTDSH2nral4bcV9z75c\no7OPRhQ+0PzcUdBOUae5Z11h\n-----END PRIVATE KEY-----\n",
-  "client_email": "firebase-adminsdk-njze6@visionml-flask.iam.gserviceaccount.com",
-  "client_id": "107571811659290193675",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-njze6%40visionml-flask.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
-}
+#             firebase_config = {
+#   "type": "service_account",
+#   "project_id": "visionml-flask",
+#   "private_key_id": "bb711339e4a0e57701e9dde2fa42dbc6c12c1af3",
+#   "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQClr/ToH5pxsVhc\n3zrSxclo+c7aVihhQZc6CSDDkrmSCqIJ6S1L+e8v5hiHeUMmS8xvt3x2A0BOwjhU\n5gwTUF9DP94FgVWtLQw69EI1urXL0QmAbUIide6bvG+3gG+uC+KR1nKkGXFWooEs\nNloSCSFNyGYiaIjvdE4DlBrCXYcE2BMVS8EV6xXQ2D4dYOUJyKt6Gd8X7j6QumkC\nbbDLzazyvI1JJAB4kvC8dZZ13u42pIrAF5L1uCBJcIfjivuPQkGPylrkto9LZ4pZ\nb15iZxK1xhFiNrCEBheBX6890/nVmPb8Fu00jddN5wweCnBhm2uP0tv4NaTLzBlH\nW6vrytetAgMBAAECggEAKUGY30LdS3GQMeHw7QJMblwDrpi1CdCSBiS3OJOcqxmE\nMykReyFjNl9aXMNsXckSgP/kmSMinGneqn804wtIiT+KOn8ztQEqUjS3ltbkxTlK\nHyU1ikyoyzUe8UelJ2a0tkE6fxOJxfuFZButjl+hIBPmIKu8azmf4mK6zgqJYAJB\nveizqTWmD3tgdxg+dolDERGFau8UIfmPlJtfD7mw99kFpIwa9gyHswdPnb29jslR\ngFiuqYRk9S/7INkV1lEuFLrm3I5jUWfSil+P7Djy79z+ei7V2/V2W5/Hta75Tm4g\nf4utEZkBGcKy+nfPx6j1EYECHA7T7RSh8zLO6sMYGQKBgQDge2CNMQ7lj9OVc6DL\nbbJKbNUShR7mEKfSIyKplGkG/1PK1IIEPRG5X3dP25UAXcF8RvhTTyt9vCF1sMJy\n95N2i+ww0BuG/UxQb1OvYVOlF807jaYnnXR38NeiB4P0f0kL2WOhkBXRKV5z6/pO\nOnJ3NQmzqJu2zMpBgE+6sCMgSQKBgQC8806P6gg5EXtx+x03UEApPQsn3A8KLAAZ\nzRuuRVLXBUgFHVD4mi/IWJK6YB0xCkjqK3NTVdIaej/ic8n0TOJ3Gq19Fmbdn2qQ\nBBvH61bHpYLMH/YnVevdTSDHlnlTfWAC1CqHv6dysybMiMFb2RhqlHmq0GN7jLEP\nS1LE+0IERQKBgQCE7KnMkWsnxhXc3n4tV4SGi5FUCR21z9EAHqwMzIOwkAp3BYUD\nq4HOSdhlojnF4L6Mr52l/zBaoMcTYJqT50Qbo1k1wlU6hszkqDdel3wnO0Pc6tCj\njpoD18pn+JlLcv+3E3/qkF5K33s9m1M5dWSIcBCRoNqr0PJG/Qq5GkmCeQKBgQCw\nlyx7cByTSXV3x1s80PHGGNkOPaqItSq68mjGbN/JOZRfw1Bjp6a0taMcMKvXo2cW\nA9narsCYIl0GhXTfr+OPsQ0ndQJaap0rT8uvApGuMU+W+uART0oLIARcxJNLpkdP\nHX9KM6KJnknKqp0b/D/HjFBRhkUTuR/ZzWnj03eViQKBgEQdPwPGnPy4rOgOv9Yg\n3uWLUOa8MIfp/vstofKClSrKcKhgvE4mEqOCLyLH1Te+oeDQgCD+kpTc2My3/ofV\nWSv0x129qMXceE3/0tpTOiiWXNo37zRqg1iLgLeJadFGnfTDSH2nral4bcV9z75c\no7OPRhQ+0PzcUdBOUae5Z11h\n-----END PRIVATE KEY-----\n",
+#   "client_email": "firebase-adminsdk-njze6@visionml-flask.iam.gserviceaccount.com",
+#   "client_id": "107571811659290193675",
+#   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+#   "token_uri": "https://oauth2.googleapis.com/token",
+#   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+#   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-njze6%40visionml-flask.iam.gserviceaccount.com",
+#   "universe_domain": "googleapis.com"
+# }
             
-            cred = credentials.Certificate(firebase_config)
-            firebase_admin.initialize_app(cred, {
-                'storageBucket': 'visionml-flask.appspot.com'
-            })
+            # cred = credentials.Certificate(firebase_config)
+            # firebase_admin.initialize_app(cred, {
+            #     'storageBucket': 'visionml-flask.appspot.com'
+            # })
             return True
         except Exception as e:
             st.error(f"Firebase initialization error: {e}")
