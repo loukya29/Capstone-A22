@@ -6,21 +6,21 @@ from eda.eda_analysis import display_eda_dashboard
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import firebase_admin
-from firebase_admin import credentials, firestore, storage
+# from firebase_admin import credentials, firestore, storage
 import datetime
 import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
 from generate_report import render_report_form
+from eda.eda_analysis import display_eda_dashboard
+# from firebase_config import initialize_firebase
 
-if not firebase_admin._apps:
-    cred = credentials.Certificate("/Users/loukyaharisha/Library/Containers/net.whatsapp.WhatsApp/Data/tmp/documents/63D0C713-7EBC-42F6-A0E1-0C9AF021F3EC/visionml-flask-firebase-adminsdk-njze6-bb711339e4.json")  
-    firebase_admin.initialize_app(cred, {"storageBucket": "visionml-flask.appspot.com"})
 
 # Set Streamlit page config
-st.set_page_config(page_title=" Fruit Quality Predictor", layout="wide")
+st.set_page_config(page_title="Fruit Quality Predictor", layout="wide")
+
+# initialize_firebase()
 
 # Dummy user database (replace with secure auth later)
 user_db = {

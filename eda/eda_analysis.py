@@ -9,7 +9,7 @@ import random
 from datetime import datetime, timedelta
 
 def display_eda_dashboard():
-    st.title("📊 Fruit Quality EDA Dashboard")
+    st.title(" Fruit Quality EDA Dashboard")
     
     # Paths to the dataset directories
     data_path = os.path.join(os.getcwd(), "processed_dataset")
