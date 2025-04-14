@@ -8,40 +8,71 @@ def analyze_fruit_image(image):
     """Analyze the fruit image using Google Gemini AI."""
     model = genai.GenerativeModel("gemini-1.5-flash")
 
-    # Combined prompt for both analysis and recommendations
-    prompt = """Analyze the given image and provide the following details:
-    - **Fruit Type:** (Name of the fruit)
-    - **Quality:** (Good/Bad, with reasoning)
-    - **Estimated Shelf Life:** (Approximate days before decay)
+    # Structured prompt for multiple fruits
+    prompt = """Analyze the given image and provide the following details for each fruit present:
 
-    Additionally, provide 3-4 specific recommendations for maintaining the quality of this fruit, considering its current condition. Format recommendations as:
-    **Recommendations:**
+    For each fruit, follow this exact format:
+    Fruit Name: [fruit name]
+    Quality: [Good/Bad] - [reasoning]
+    Estimated Shelf Life: [number] days
+
+    After analyzing all fruits, provide 3-4 specific recommendations for maintaining their quality. 
+    Format recommendations exactly like this:
+    Recommendations:
     1. [First recommendation]
     2. [Second recommendation]
-    3. [Third recommendation]"""
+    3. [Third recommendation]
+    4. [Fourth recommendation] (if applicable)
+
+    Important: 
+    - Separate each fruit's analysis with a blank line
+    - Maintain the exact same heading format for each section
+    - List all fruits present in the image
+    - Do not use any markdown formatting (no ** or other formatting)"""
 
     response = model.generate_content([prompt, image])
-    processed_text = response.text.replace("**", "").strip()
+    processed_text = response.text
 
-    # Extract all required information
-    quality = "Unknown"
-    shelf_life = "Unknown"
+    # Clean the text by removing any remaining markdown
+    cleaned_text = processed_text.replace("**", "").strip()
+
+    # Parse the structured response
+    fruits = []
+    current_fruit = {}
     recommendations = []
-
-    # Parse the response
     in_recommendations = False
-    for line in processed_text.split("\n"):
-        if "Quality:" in line:
-            quality = line.split(":", 1)[-1].strip()
-        elif "Estimated Shelf Life:" in line:
-            shelf_life = line.split(":", 1)[-1].strip()
-        elif "Recommendations:" in line:
+
+    for line in cleaned_text.split("\n"):
+        line = line.strip()
+
+        if line.startswith("Fruit Name:"):
+            if current_fruit:  # Save previous fruit if exists
+                fruits.append(current_fruit)
+            current_fruit = {
+                'name': line.split(":", 1)[-1].strip(),
+                'quality': None,
+                'shelf_life': None
+            }
+        elif line.startswith("Quality:") and current_fruit:
+            current_fruit['quality'] = line.split(":", 1)[-1].strip()
+        elif line.startswith("Estimated Shelf Life:") and current_fruit:
+            current_fruit['shelf_life'] = line.split(":", 1)[-1].strip()
+        elif line.startswith("Recommendations:"):
             in_recommendations = True
-        elif in_recommendations and line.strip() and line[0].isdigit():
-            recommendations.append(line.strip().split(".", 1)[-1].strip())
+        elif in_recommendations and line and line[0].isdigit():
+            rec = line.split(".", 1)[-1].strip()
+            recommendations.append(rec)
 
-    return quality, shelf_life, "\n".join(recommendations)
+    # Add the last fruit if exists
+    if current_fruit:
+        fruits.append(current_fruit)
 
+    # Format the output without any markdown
+    quality = ", ".join([f"{f['name']}: {f['quality']}" for f in fruits])
+    shelf_life = ", ".join([f"{f['name']}: {f['shelf_life']}" for f in fruits])
+    recommendations_str = "\n".join(recommendations)
+
+    return quality, shelf_life, recommendations_str
 
 def generate_pdf_report(farmer_name, fruit_name, shelf_life, quality, recommendations, fruit_image=None):
     """Generate PDF report with improved formatting and image inclusion."""
