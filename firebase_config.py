@@ -3,11 +3,11 @@
 # import firebase_admin
 # from firebase_admin import credentials, storage
 # import os
-
+#
 # def initialize_firebase():
 #     if not firebase_admin._apps:
 #         try:
-#             cred = credentials.Certificate("/Users/loukyaharisha/Desktop/capstone/visionml-flask-firebase-adminsdk-njze6-bb711339e4.json")
+#             cred = credentials.Certificate("C:\\8th Sem\\\Final Year Project\\Capstone-A22\\visionml-flask-firebase-adminsdk-njze6-bb711339e4.json")
 #             firebase_admin.initialize_app(cred, {
 #                 "storageBucket": "visionml-flask.appspot.com"
 #             })
@@ -16,7 +16,7 @@
 #             st.error(f"Firebase initialization error: {e}")
 #             return False
 #     return True
-
+#
 # def test_firebase_connection():
 #     try:
 #         bucket = storage.bucket()
@@ -27,7 +27,7 @@
 #     except Exception as e:
 #         st.error(f"Firebase access error: {e}")
 #         return False
-
+#
 # def upload_to_firebase(file_path, destination_blob_name):
 #     try:
 #         bucket = storage.bucket()

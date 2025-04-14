@@ -1,0 +1,30 @@
+# Python virtual environment
+venv/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Streamlit cache
+.streamlit/
+
+# Configuration files
+.env
+.env.*
+
+# Log files
+*.log
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# MacOS specific files
+.DS_Store
+
+# Temporary files
+*~
+
+# JetBrains IDE files
+.idea/
+
+reports/

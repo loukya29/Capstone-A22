@@ -25,7 +25,8 @@ st.set_page_config(page_title="Fruit Quality Predictor", layout="wide")
 # Dummy user database (replace with secure auth later)
 user_db = {
     "admin": "password123",
-    "loukya": "capstone2025"
+    "loukya": "capstone2025",
+    "1":"1"
 }
 
 # Session state for login
