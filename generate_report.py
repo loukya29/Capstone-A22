@@ -1,3 +1,5 @@
+from PIL import ImageOps
+
 from constants.common_imports import *
 
 API_KEY = "AIzaSyDMEdiL-HTYOXl8bGSDHSJ98UV3UEte3MU"
@@ -74,8 +76,9 @@ def analyze_fruit_image(image):
 
     return quality, shelf_life, recommendations_str
 
-def generate_pdf_report(farmer_name, fruit_name, shelf_life, quality, recommendations, fruit_image=None):
-    """Generate PDF report with improved formatting and image inclusion."""
+
+def generate_pdf_report(farmer_name, shelf_life, quality, recommendations, fruit_image=None):
+    """Generate PDF report with modern, professional theme and improved structure."""
     if not os.path.exists("reports"):
         os.makedirs("reports")
 
@@ -83,75 +86,182 @@ def generate_pdf_report(farmer_name, fruit_name, shelf_life, quality, recommenda
     filename = f"fruit_report_{farmer_name}_{timestamp}.pdf"
     filepath = os.path.join("reports", filename)
 
-    doc = SimpleDocTemplate(filepath, pagesize=letter)
+    doc = SimpleDocTemplate(filepath, pagesize=letter,
+                            leftMargin=0.75 * inch, rightMargin=0.75 * inch,
+                            topMargin=0.75 * inch, bottomMargin=0.75 * inch)
     styles = getSampleStyleSheet()
 
-    title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontSize=24, alignment=1,
-                                 textColor=colors.HexColor('#1e88e5'))
-    heading_style = ParagraphStyle('Heading', parent=styles['Heading2'], fontSize=16,
-                                   textColor=colors.HexColor('#43a047'))
+    # Professional color scheme
+    background_color = '#F5F6F5'  # Light gray
+    primary_color = '#2C3E50'  # Dark blue-gray
+    accent_color = '#3498DB'  # Blue
+    text_color = '#333333'  # Dark gray
+    card_bg = '#FFFFFF'  # White for cards
 
-    elements = [Paragraph("Fruit Quality Analysis Report", title_style), Spacer(1, 20)]
+    # Define custom styles only if they don't exist
+    style_definitions = {
+        'ReportTitle': ParagraphStyle(
+            'ReportTitle',
+            parent=styles['Heading1'],
+            fontName='Helvetica-Bold',
+            fontSize=22,
+            alignment=1,
+            textColor=colors.HexColor(primary_color),
+            spaceAfter=24
+        ),
+        'SectionHeading': ParagraphStyle(
+            'SectionHeading',
+            parent=styles['Heading2'],
+            fontName='Helvetica-Bold',
+            fontSize=16,
+            textColor=colors.HexColor(primary_color),
+            spaceAfter=12,
+            spaceBefore=12
+        ),
+        'BodyText': ParagraphStyle(
+            'BodyText',
+            parent=styles['Normal'],
+            fontName='Helvetica',
+            textColor=colors.HexColor(text_color),
+            fontSize=11,
+            leading=14,
+            spaceAfter=8
+        ),
+        'CardLabel': ParagraphStyle(
+            'CardLabel',
+            parent=styles['Normal'],
+            fontName='Helvetica-Bold',
+            textColor=colors.HexColor(text_color),
+            fontSize=11,
+            leading=14
+        )
+    }
 
-    # Format multiline text for table cells
-    def format_cell_text(text):
-        return Paragraph(text, styles['Normal'])
+    # Add styles only if they don't already exist
+    for style_name, style in style_definitions.items():
+        if style_name not in styles:
+            styles.add(style)
 
-    # Prepare table data with farmer name first
-    data = [
-        ["Farmer Name:", format_cell_text(farmer_name)],
-        ["Report Generated:", format_cell_text(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))],
-        ["Fruit Type:", format_cell_text(fruit_name)],
-        ["Shelf Life:", format_cell_text(shelf_life)],
-        ["Quality Score:", format_cell_text(quality)]
+    # Create story elements
+    elements = []
+
+    # Header
+    elements.append(Paragraph("Fruit Quality Analysis Report", styles['ReportTitle']))
+    elements.append(Spacer(1, 12))
+
+    # Farmer Info Section
+    farmer_data = [
+        ["Farmer Name:", Paragraph(farmer_name, styles['BodyText'])],
+        ["Report Date:", Paragraph(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+                                   styles['BodyText'])],
+        ["Fruit Type:", Paragraph("Banana", styles['BodyText'])]  # Assuming from input PDF
     ]
 
-    # Create table with adjusted styling
-    table = Table(data, colWidths=[2 * inch, 4 * inch])
-    table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
-        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
-        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 0), (-1, -1), 12),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
-        ('TOPPADDING', (0, 0), (-1, -1), 12),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    farmer_table = Table(farmer_data, colWidths=[2 * inch, 4.5 * inch])
+    farmer_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor(card_bg)),
+        ('TEXTCOLOR', (0, 0), (0, -1), colors.HexColor(primary_color)),
+        ('TEXTCOLOR', (1, 0), (-1, -1), colors.HexColor(text_color)),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 11),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 12),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 12),
+        ('TOPPADDING', (0, 0), (-1, -1), 8),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ('BOX', (0, 0), (-1, -1), 0.5, colors.HexColor('#E0E0E0')),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#E0E0E0')),
     ]))
+    elements.append(farmer_table)
+    elements.append(Spacer(1, 24))
 
-    elements.append(table)
-    elements.append(Spacer(1, 20))
+    # Analysis Section
+    elements.append(Paragraph("Fruit Analysis", styles['SectionHeading']))
 
-    # Add the fruit image
+    # Split shelf life and quality for better formatting
+    shelf_life_lines = shelf_life.split(', ')
+    quality_lines = quality.split(', ')
+
+    analysis_data = [
+        ["Shelf Life:", Paragraph("<br/>".join(shelf_life_lines), styles['BodyText'])],
+        ["Quality Assessment:", Paragraph("<br/>".join(quality_lines), styles['BodyText'])]
+    ]
+
+    analysis_table = Table(analysis_data, colWidths=[2 * inch, 4.5 * inch])
+    analysis_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor(card_bg)),
+        ('TEXTCOLOR', (0, 0), (0, -1), colors.HexColor(primary_color)),
+        ('TEXTCOLOR', (1, 0), (-1, -1), colors.HexColor(text_color)),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 11),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 12),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 12),
+        ('TOPPADDING', (0, 0), (-1, -1), 8),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ('BOX', (0, 0), (-1, -1), 0.5, colors.HexColor('#E0E0E0')),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#E0E0E0')),
+    ]))
+    elements.append(analysis_table)
+    elements.append(Spacer(1, 24))
+
+    # Image Section
     if fruit_image:
         try:
-            # Save the image temporarily
+            elements.append(Paragraph("Analyzed Fruit Image", styles['SectionHeading']))
+
             img_temp = BytesIO()
             pil_image = PILImage.open(fruit_image)
-            pil_image.save(img_temp, format='PNG')
+
+            # Professional image border
+            bordered_img = ImageOps.expand(pil_image, border=8,
+                                           fill=(255, 255, 255))  # White border
+            bordered_img.save(img_temp, format='PNG')
             img_temp.seek(0)
 
-            # Add image to PDF
+            from reportlab.platypus import Image as RLImage
             img = RLImage(img_temp, width=4 * inch, height=3 * inch)
-            elements.append(Paragraph("Analyzed Fruit Image:", heading_style))
-            elements.append(Spacer(1, 10))
+            img.hAlign = 'CENTER'
             elements.append(img)
-            elements.append(Spacer(1, 20))
+            elements.append(Spacer(1, 24))
         except Exception as e:
             print(f"Error processing image: {str(e)}")
         finally:
-            fruit_image.seek(0)  # Reset file pointer
+            if hasattr(fruit_image, 'seek'):
+                fruit_image.seek(0)
 
-    # Add recommendations
-    elements.append(Paragraph("Recommendations:", heading_style))
-    for rec in recommendations.split('\n'):
-        if rec.strip():
-            elements.append(Paragraph(f"• {rec.strip()}", styles['Normal']))
-            elements.append(Spacer(1, 10))
+    # Recommendations Section
+    elements.append(Paragraph("Recommendations", styles['SectionHeading']))
 
-    doc.build(elements)
+    rec_list = [r.strip() for r in recommendations.split('\n') if r.strip()]
+    for rec in rec_list:
+        bullet = Paragraph(f"• {rec}", styles['BodyText'])
+        elements.append(bullet)
+        elements.append(Spacer(1, 6))
+
+    # Footer
+    elements.append(Spacer(1, 36))
+    if 'Footer' not in styles:
+        styles.add(ParagraphStyle('Footer',
+                                  parent=styles['Normal'],
+                                  fontName='Helvetica',
+                                  fontSize=9,
+                                  textColor=colors.HexColor('#666666'),
+                                  alignment=1))
+    elements.append(Paragraph("Generated by Fruit Quality Analyzer", styles['Footer']))
+
+    # Background
+    def add_background(canvas, doc):
+        canvas.saveState()
+        canvas.setFillColor(colors.HexColor(background_color))
+        canvas.rect(0, 0, doc.width + doc.leftMargin * 2,
+                    doc.height + doc.topMargin * 2, stroke=0, fill=1)
+        canvas.restoreState()
+        return None
+
+    doc.build(elements, onFirstPage=add_background, onLaterPages=add_background)
+
     return filepath
-
 
 def get_download_link(file_path):
     """Generate a download link for the PDF report."""
@@ -172,12 +282,12 @@ def render_report_form():
         with col1:
             farmer_name = st.text_input("👨‍🌾 Farmer Name")
             fruit_image = st.file_uploader("🍎 Upload Fruit Image", type=['jpg', 'jpeg', 'png'])
-            fruit_name = st.selectbox("🍎 Fruit Type", ["Banana", "Apple", "Orange", "Mango"])
+            # fruit_name = st.selectbox("🍎 Fruit Type", ["Banana", "Apple", "Orange", "Mango"])
 
         submitted = st.form_submit_button("Generate Report")
 
         if submitted:
-            if farmer_name and fruit_name and fruit_image:
+            if farmer_name and fruit_image:
                 with st.spinner("🔄 Analyzing Image and Generating Report..."):
                     try:
                         # Convert to PIL Image for analysis
@@ -188,7 +298,7 @@ def render_report_form():
                         fruit_image.seek(0)
 
                         pdf_path = generate_pdf_report(
-                            farmer_name, fruit_name, shelf_life, quality, recommendations, fruit_image
+                            farmer_name, shelf_life, quality, recommendations, fruit_image
                         )
 
                         st.success("✅ Report generated successfully!")
